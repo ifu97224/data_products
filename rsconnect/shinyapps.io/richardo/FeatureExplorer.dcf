@@ -2,6 +2,6 @@ name: FeatureExplorer
 account: richardo
 server: shinyapps.io
 appId: 85221
-bundleId: 379959
+bundleId: 379985
 url: https://richardo.shinyapps.io/FeatureExplorer/
-when: 1456367303.83179
+when: 1456369103.89319
