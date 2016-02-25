@@ -1,0 +1,12 @@
+variable,variable_label,type
+mpg,MPG,continuous
+cyl,Number of Cylinders,continuous
+disp,Displacement,continuous
+hp,Horsepower,continuous
+drat,Rear Axle Ratio,continuous
+wt,Weight(1000 lbs),continuous
+qsec,1/4 Mile Time,continuous
+vs,V/S,factor
+am,Transmission (0=automatic 1=manual),factor
+gear,Number of Gears,factor
+carb,Number of carburetors,factor
