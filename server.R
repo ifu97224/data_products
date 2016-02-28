@@ -4,24 +4,70 @@ require(datasets)
 library(ggplot2)
 
 
+
+  
+# 
+# # extract the factor variables from the main data and convert to factor
+# factor_vars <- subset(meta_data, toupper(type) == "FACTOR") 
+# factor_vars2 <- as.character(factor_vars$variable)
+# factor_vars3 <- as.data.frame(sapply(main_data[factor_vars2],as.factor))
+# 
+# # extract the continuous variables
+# continuous_vars <- subset(meta_data, toupper(type) == "CONTINUOUS") 
+# continuous_vars2 <- as.character(continuous_vars$variable)
+# continuous_vars3 <- as.data.frame(main_data[continuous_vars2])
+# main_data <- cbind(factor_vars3,continuous_vars3)  
+# 
+# # add a factor row so that the facet and color variables can be none
+# variable <- "none"
+# variable_label <- "None"
+# type <- "factor"
+# add_none <- data.frame(variable,variable_label,type)
+# meta_data <- rbind(meta_data,add_none)
+# 
+# # create dataset to feed drop downs with continuous variables
+# continuous_vars <- subset(meta_data, toupper(type) == "CONTINUOUS")
+# continuous_choices <- setNames(continuous_vars$variable,continuous_vars$variable_label)
+# 
+# # create dataset to feed drop downs with factor variables
+# factor_vars <- subset(meta_data, toupper(type) == "FACTOR") 
+# factor_choices <- setNames(factor_vars$variable,factor_vars$variable_label)
+# 
+# Data <- list(main_data = main_data,
+#                  meta_data = meta_data,
+#                  continuous_choices = continuous_choices,
+#                  factor_choices = factor_choices) 
+
+
 shinyServer(function(input, output) {
 
   Data <- reactive({
           inFile1 <- input$main_data
            if (is.null(inFile1)) {
-             return(null)
+             main_data <- mtcars
             }
-    
-    main_data <- read.csv(inFile1$datapath, header = input$header1,
+    if (is.null(inFile1) == FALSE) {
+        main_data <- read.csv(inFile1$datapath, header = input$header1,
                           sep = input$sep1, quote = input$quote1)
-    
+    }
+          
     inFile2 <- input$metadata
     if (is.null(inFile2)) {
-      return(NULL)
+       variable <- c("mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb")
+       variable_label <- c("MPG","Number of Cylinders","Displacement","Horsepower","Rear Axle Ratio","Weight(1000 lbs)",
+                           "1/4 Mile Time","V/S","Transmission (0=automatic 1=manual)","Number of Gears","Number of carburetors")
+       type <- c("continuous","continuous","continuous","continuous","continuous","continuous","continuous","factor","factor","factor","factor")
+       meta_data <- data.frame(variable,variable_label,type)
+       meta_data$variable_label <- as.character(meta_data$variable_label)
+       meta_data$variable <- as.character(meta_data$variable)
+       meta_data$type <- as.character(meta_data$type)
+      
     }
     
+    if (is.null(inFile2) == FALSE) {
     meta_data <- read.csv(inFile2$datapath, header = input$header2,
                           sep = input$sep2, quote = input$quote2, stringsAsFactors = F)
+    }
     
     # extract the factor variables from the main data and convert to factor
     factor_vars <- subset(meta_data, toupper(type) == "FACTOR") 
@@ -55,8 +101,9 @@ shinyServer(function(input, output) {
                      meta_data = meta_data,
                      continuous_choices = continuous_choices,
                      factor_choices = factor_choices) 
+    
     return(all_data)
-                 
+               
   })
   
   output$main_data_preview <- renderTable({
