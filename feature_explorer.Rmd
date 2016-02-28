@@ -1,0 +1,106 @@
+---
+title       : Developing Data Products
+subtitle    : Reproducible Pitch for Feature Explorer Shiny App
+author      : Richard Downey
+job         : 
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+logo        : coursera_logo.png
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+
+---
+
+## Introducing the Feature Explorer App
+
+<style>
+strong {
+  font-weight: bold;
+}
+</style>
+
+*  The Feature Explorer App has been developed to allow users to upload any data file of their choosing and create presentation quality visualizations
+
+*  The following plots can be generated using the App:
+
+     a.) **Scatterplots:**  X and Y variables can be chosen as well as color and facet variables.  Linear smoothing lines can also be added
+     
+     b.) **Boxplots:**  X and Y variables can be chosen
+     
+     c.) **Histograms:** X variable can be chosen, number of bins can be selected and density lines can be added
+
+
+--- .class #id 
+
+## Importing Data
+
+*  The App allows the user to upload any data file of their choosing and includes controls to allow for different delimiters and whether the file includes headers
+
+<img src="import_data_screen.png" height="350" width="850">
+
+*  The App also requires the user to upload a meta data file containing descriptions of the variables and whether they should be treated as continuous or factors
+
+--- .class #id 
+
+## Plotting Data
+
+*  The charts below are examples of plots that can be created using the App:
+
+```{r, echo=FALSE,fig.width=13, fig.height=6}
+
+library(gridExtra)
+
+a <- ggplot(mtcars,aes(mpg,hp)) +
+           geom_point(color="orange") +  
+           theme_bw(base_family = "Arial") + 
+           ggtitle("Scatterplot of MPG by Horsepower") + 
+           xlab("MPG") + 
+           ylab("Horsepower") +
+           theme(axis.title.y=element_text(vjust=1), 
+                 axis.title.x=element_text(vjust=-0.5),
+                 plot.title=element_text(vjust=1)) +
+          geom_smooth(size = 1, linetype = 2, method = "lm", se = FALSE, color = "red")
+
+b <- ggplot(mtcars,aes(factor(cyl), mpg)) +
+        geom_boxplot(fill="orange") +
+        theme_bw(base_family = "Arial") + 
+        ggtitle("Boxplot of MPG by Number of Cylinders") +
+        xlab("Number of Cylinders") + 
+        ylab("MPG") +
+        theme(axis.title.y=element_text(vjust=1), 
+              axis.title.x=element_text(vjust=-0.5),
+              plot.title=element_text(vjust=1))
+
+grid.arrange(a,b,ncol=2)
+
+```
+
+
+--- .class #id 
+
+## Planned Future Developments
+
+<style>
+em {
+  font-style: italic
+}
+</style>
+
+*  Creating a correlation matrix and variable cluster tree to understand the relationships between the variables
+*  Developing an interface to allow users to bin and transform variables and add them to the uploaded data set
+*  Allowing the user to choose a *target* variable and to rank variables in order of their importance in predicting the chosen *target*.  The user will be able to choose from multiple methods of ranking including:
+
+     a.)  Random Forest Importance
+     
+     b.)  Squared Correlations
+     
+     c.)  T-Tests
+     
+     d.)  Chi-Squared Tests
+     
+     e.)  Univariate regression
+
+
+
